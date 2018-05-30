@@ -1,0 +1,26 @@
+#container {
+    position:absolute;
+    left:50%;
+    width:800px;
+    margin-left:-250px;
+    margin-top:100px;
+}
+
+#left-part {
+    float: left;
+}
+
+#right-part {
+    float: right;
+}
+
+#left-part,
+#right-part {
+    width: 50%;
+    overflow-y: scroll;
+    max-height:600px;
+}
+
+.friend-ava {
+    border-radius: 50%;
+}
