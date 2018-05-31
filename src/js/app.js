@@ -38,7 +38,7 @@ function loadFriendsToLeftColumn(friendsArray) {
 
     for (let data of friendsArray) {
         let friendDiv = document.createElement('div');
-        friendDiv.setAttribute('class', 'friend-container');
+        friendDiv.setAttribute('class', 'friend-container draggable');
 
         let avatar = document.createElement('img');
         avatar.setAttribute('src', data['photo_100']);
@@ -49,6 +49,11 @@ function loadFriendsToLeftColumn(friendsArray) {
         name.setAttribute('class', 'friend-name');
         name.textContent = `${data['first_name']} ${data['last_name']}`;
         friendDiv.appendChild(name);
+
+        let plus = document.createElement('img');
+        plus.setAttribute('src', './assets/img/plus.gif');
+        plus.setAttribute('class', 'friend-add');
+        friendDiv.appendChild(plus);
 
         allContainer.appendChild(friendDiv);
     }
