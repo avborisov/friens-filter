@@ -133,7 +133,9 @@ var DragManager = new function() {
 
     this.onDragEnd = function(dragObject, dropElem) {
         dragObject.avatar.rollback();
-        dropElem.appendChild(dragObject.elem);
+        if (dropElem != dragObject.avatar.parentNode) {
+            dropElem.appendChild(dragObject.elem);
+        }
     };
 
     this.onDragCancel = function(dragObject) {
