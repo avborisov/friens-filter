@@ -111,13 +111,13 @@ var DragManager = new function() {
 
     function findDroppable(event) {
         // спрячем переносимый элемент
-        dragObject.avatar.hidden = true;
+        dragObject.avatar.style.display = 'none';
 
         // получить самый вложенный элемент под курсором мыши
         var elem = document.elementFromPoint(event.clientX, event.clientY);
 
         // показать переносимый элемент обратно
-        dragObject.avatar.hidden = false;
+        dragObject.avatar.display = 'block';
 
         if (elem == null) {
             // такое возможно, если курсор мыши "вылетел" за границу окна

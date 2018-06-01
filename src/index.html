@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,16 +14,26 @@
         <div>
             <div id="left-part">
                 <div id="all-filter">
-                    <input type="text" id="all-filter-input" />
+                    <div class="search">
+                        <img src="assets/img/search.gif"/>
+                        <input type="text" id="all-filter-input" placeholder="Начните вводить имя друга">
+                    </div>
                 </div>
-                <div id="all-header">Ваши друзья</div>
+                <div id="all-header">
+                    <div>Ваши друзья</div>
+                </div>
                 <div id="all-container" class="droppable"></div>
             </div>
             <div id="right-part">
                 <div id="selected-filter">
-                    <input type="text" id="selected-filter-input" />
+                    <div class="search">
+                        <img src="assets/img/search.gif"/>
+                        <input type="text" id="selected-filter-input" placeholder="Начните вводить имя друга">
+                    </div>
                 </div>
-                <div id="selected-header">Друзья в списке</div>
+                <div id="selected-header">
+                    <div>Друзья в списке</div>
+                </div>
                 <div id="selected-container" class="droppable"></div>
             </div>
         </div>

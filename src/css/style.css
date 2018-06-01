@@ -1,9 +1,18 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
 #container {
     position:absolute;
     left:50%;
     width:800px;
     margin-left:-400px;
     margin-top:100px;
+}
+
+#selected-container,
+#all-container {
+    overflow-y: scroll;
 }
 
 #left-part {
@@ -17,9 +26,46 @@
 #left-part,
 #right-part {
     width: 50%;
-    overflow-y: scroll;
     max-height:600px;
     height:560px;
+}
+
+.friend-container {
+    margin: 0 15px;
+    padding: 10px;
+    display: table;
+    width: 350px;
+}
+
+.friend-container:first-child {
+    margin-top: 0px;
+}
+
+.friend-container span,
+.friend-container img {
+    vertical-align: middle;
+}
+
+.friend-container img.friend-add {
+    margin-top: 30px;
+    float: right;
+}
+
+#all-header div,
+#selected-header div {
+    padding-bottom: 10px;
+    margin-right: 20px;
+    width: 95%;
+    border-bottom: 1px solid #c4c4c4;
+}
+
+#all-header,
+#selected-header,
+.friend-name {
+    margin: 10px 0 0 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #4f4f4f;
 }
 
 .friend-container:hover {
@@ -28,6 +74,8 @@
 
 .friend-ava {
     border-radius: 50%;
+    width: 75px;
+    height: 75px;
 }
 
 .friend-add:hover,
@@ -46,4 +94,56 @@
 .droppable {
     z-index: 10;
     height: 100%;
+}
+
+#header {
+    background-color: #ff8663;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px 10px 0 0;
+    padding: 10px 15px;
+}
+
+#all-filter,
+#selected-filter {
+    background-color: #f0f0f0;
+    padding: 10px 15px;
+}
+
+.search {
+    border-radius: 20px;
+    background-color: white;
+}
+
+.search img {
+    margin: 7px 7px 0 7px;
+}
+
+.search input {
+    width: 85%;
+    border-width: 0px;
+    border: none;
+    line-height: 25px;
+    margin-bottom: 3px;
+}
+
+.search input:focus{
+    outline: none;
+}
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background: #c4c4c4;
 }
