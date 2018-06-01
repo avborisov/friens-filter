@@ -2,6 +2,7 @@ const allContainer = document.querySelector('#all-container');
 const selectedContainer = document.querySelector('#selected-container');
 const allFriendsFilter = document.querySelector('#all-filter-input');
 const selectedFriendsFilter = document.querySelector('#selected-filter-input');
+const saveBtn = document.querySelector('#save-btn');
 
 VK.init({
     apiId: 5520174
@@ -73,15 +74,20 @@ document.addEventListener('click', e => {
         let oldContainer = friend.closest('.droppable');
 
         if (oldContainer.id == 'all-container') {
-            let deleted = removeFriendFromStorage(LOCAL_STORAGE_ALL_FRIENDS_NAME, friend.id);
-            addFriendToStorage(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, deleted);
+            let deleted = removeFriendFromTmp(TMP_ALL_FRIENDS_NAME, friend.id);
+            addFriendToTmp(TMP_SELECTED_FRIENDS_NAME, deleted);
         } else {
-            let deleted = removeFriendFromStorage(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, friend.id);
-            addFriendToStorage(LOCAL_STORAGE_ALL_FRIENDS_NAME, deleted);
+            let deleted = removeFriendFromTmp(TMP_SELECTED_FRIENDS_NAME, friend.id);
+            addFriendToTmp(TMP_ALL_FRIENDS_NAME, deleted);
         }
 
         reloadContainers();
     }
+});
+
+saveBtn.addEventListener('click', e => {
+    localStorage.setItem(LOCAL_STORAGE_ALL_FRIENDS_NAME, JSON.stringify(tmpAllFriendsStorage));
+    localStorage.setItem(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, JSON.stringify(tmpSelectedFriendsStorage));
 });
 
 allFriendsFilter.addEventListener('keyup', e => {
@@ -93,9 +99,8 @@ selectedFriendsFilter.addEventListener('keyup', e => {
 });
 
 function reloadAllFriendsContainer() {
-    let friendsArray = getAllFriendsFromStorage();
     let filteredFiends = [];
-    for (let data of friendsArray) {
+    for (let data of tmpAllFriendsStorage) {
         if (isMatching(`${data['first_name']} ${data['last_name']}`, allFriendsFilter.value)) {
             filteredFiends.push(data);
         }
@@ -104,9 +109,8 @@ function reloadAllFriendsContainer() {
 }
 
 function reloadSelectedContainer() {
-    let friendsArray = getSelectedFriendsFromStorage();
     let filteredFiends = [];
-    for (let data of friendsArray) {
+    for (let data of tmpSelectedFriendsStorage) {
         if (isMatching(`${data['first_name']} ${data['last_name']}`, selectedFriendsFilter.value)) {
             filteredFiends.push(data);
         }
@@ -127,7 +131,6 @@ function reloadContainers() {
             await auth();
             const friends = await callAPI('friends.get', { fields: 'first_name, last_name, photo_100' });
             friendsArray = friends.items;
-            localStorage.setItem(LOCAL_STORAGE_ALL_FRIENDS_NAME, JSON.stringify(friendsArray));
         } catch (e) {
             console.error(e);
         }
@@ -135,7 +138,9 @@ function reloadContainers() {
         friendsArray = getAllFriendsFromStorage();
     }
 
+    tmpAllFriendsStorage = friendsArray;
     loadFriendsToContainer(friendsArray, allContainer);
+
 
     let selectedFriendsArray = [];
     let selectedFriends = localStorage.getItem(LOCAL_STORAGE_SELECTED_FRIENDS_NAME);
@@ -144,4 +149,5 @@ function reloadContainers() {
     }
 
     loadFriendsToContainer(selectedFriendsArray, selectedContainer);
+    tmpSelectedFriendsStorage = selectedFriendsArray;
 })();

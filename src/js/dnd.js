@@ -117,7 +117,7 @@ var DragManager = new function() {
         var elem = document.elementFromPoint(event.clientX, event.clientY);
 
         // показать переносимый элемент обратно
-        dragObject.avatar.display = 'block';
+        dragObject.avatar.style.display = 'block';
 
         if (elem == null) {
             // такое возможно, если курсор мыши "вылетел" за границу окна
@@ -138,11 +138,11 @@ var DragManager = new function() {
             dropElem.appendChild(dragObject.elem);
 
             if (dropElem.id == 'all-container') {
-                let deleted = removeFriendFromStorage(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, dragObject.elem.id);
-                addFriendToStorage(LOCAL_STORAGE_ALL_FRIENDS_NAME, deleted);
+                let deleted = removeFriendFromTmp(TMP_SELECTED_FRIENDS_NAME, dragObject.elem.id);
+                addFriendToTmp(TMP_ALL_FRIENDS_NAME, deleted);
             } else {
-                let deleted = removeFriendFromStorage(LOCAL_STORAGE_ALL_FRIENDS_NAME, dragObject.elem.id);
-                addFriendToStorage(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, deleted);
+                let deleted = removeFriendFromTmp(TMP_ALL_FRIENDS_NAME, dragObject.elem.id);
+                addFriendToTmp(TMP_SELECTED_FRIENDS_NAME, deleted);
             }
 
             reloadContainers();
