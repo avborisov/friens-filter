@@ -1,6 +1,3 @@
-const LOCAL_STORAGE_ALL_FRIENDS_NAME = 'all_friends';
-const LOCAL_STORAGE_SELECTED_FRIENDS_NAME = 'selected_friends';
-
 const allContainer = document.querySelector('#all-container');
 const selectedContainer = document.querySelector('#selected-container');
 const allFriendsFilter = document.querySelector('#all-filter-input');
@@ -34,16 +31,6 @@ function callAPI(method, params) {
             }
         });
     })
-}
-
-function getAllFriendsFromStorage() {
-    let result = JSON.parse(localStorage.getItem(LOCAL_STORAGE_ALL_FRIENDS_NAME));
-    return result == null ? new Array() : result;
-}
-
-function getSelectedFriendsFromStorage() {
-    let result = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SELECTED_FRIENDS_NAME));
-    return result == null ? new Array() : result;
 }
 
 function loadFriendsToContainer(friendsArray, container) {
@@ -80,7 +67,32 @@ function isMatching(full, chunk) {
     return full.toLowerCase().includes(chunk.toLowerCase());
 }
 
-allFriendsFilter.addEventListener('keyup', function() {
+document.addEventListener('click', e => {
+    if (e.target.classList.contains('friend-add')) {
+        let friend = e.target.closest('.draggable');
+        let oldContainer = friend.closest('.droppable');
+
+        if (oldContainer.id == 'all-container') {
+            let deleted = removeFriendFromStorage(LOCAL_STORAGE_ALL_FRIENDS_NAME, friend.id);
+            addFriendToStorage(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, deleted);
+        } else {
+            let deleted = removeFriendFromStorage(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, friend.id);
+            addFriendToStorage(LOCAL_STORAGE_ALL_FRIENDS_NAME, deleted);
+        }
+
+        reloadContainers();
+    }
+});
+
+allFriendsFilter.addEventListener('keyup', e => {
+    reloadAllFriendsContainer();
+});
+
+selectedFriendsFilter.addEventListener('keyup', e => {
+    reloadSelectedContainer();
+});
+
+function reloadAllFriendsContainer() {
     let friendsArray = getAllFriendsFromStorage();
     let filteredFiends = [];
     for (let data of friendsArray) {
@@ -89,9 +101,9 @@ allFriendsFilter.addEventListener('keyup', function() {
         }
     }
     loadFriendsToContainer(filteredFiends, allContainer);
-});
+}
 
-selectedFriendsFilter.addEventListener('keyup', function() {
+function reloadSelectedContainer() {
     let friendsArray = getSelectedFriendsFromStorage();
     let filteredFiends = [];
     for (let data of friendsArray) {
@@ -100,7 +112,12 @@ selectedFriendsFilter.addEventListener('keyup', function() {
         }
     }
     loadFriendsToContainer(filteredFiends, selectedContainer);
-});
+}
+
+function reloadContainers() {
+    reloadAllFriendsContainer();
+    reloadSelectedContainer();
+}
 
 (async () => {
     let friendsArray = [];
