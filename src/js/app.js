@@ -1,3 +1,11 @@
+const LOCAL_STORAGE_ALL_FRIENDS_NAME = 'all_friends';
+const LOCAL_STORAGE_SELECTED_FRIENDS_NAME = 'selected_friends';
+
+const allContainer = document.querySelector('#all-container');
+const selectedContainer = document.querySelector('#selected-container');
+const allFriendsFilter = document.querySelector('#all-filter-input');
+const selectedFriendsFilter = document.querySelector('#selected-filter-input');
+
 VK.init({
     apiId: 5520174
 });
@@ -29,16 +37,25 @@ function callAPI(method, params) {
 }
 
 function getAllFriendsFromStorage() {
-    return JSON.parse(localStorage.getItem('all_friends'));
+    let result = JSON.parse(localStorage.getItem(LOCAL_STORAGE_ALL_FRIENDS_NAME));
+    return result == null ? new Array() : result;
 }
 
-function loadFriendsToLeftColumn(friendsArray) {
-    let allContainer = document.querySelector('#all-container');
-    allContainer.innerHTML = "";
+function getSelectedFriendsFromStorage() {
+    let result = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SELECTED_FRIENDS_NAME));
+    return result == null ? new Array() : result;
+}
 
-    for (let data of friendsArray) {
+function loadFriendsToContainer(friendsArray, container) {
+
+    container.innerHTML = "";
+
+    for (let i = 0; i < friendsArray.length; i++) {
+        let data = friendsArray[i];
+
         let friendDiv = document.createElement('div');
         friendDiv.setAttribute('class', 'friend-container draggable');
+        friendDiv.setAttribute('id', i);
 
         let avatar = document.createElement('img');
         avatar.setAttribute('src', data['photo_100']);
@@ -55,15 +72,13 @@ function loadFriendsToLeftColumn(friendsArray) {
         plus.setAttribute('class', 'friend-add');
         friendDiv.appendChild(plus);
 
-        allContainer.appendChild(friendDiv);
+        container.appendChild(friendDiv);
     }
 }
 
 function isMatching(full, chunk) {
     return full.toLowerCase().includes(chunk.toLowerCase());
 }
-
-const allFriendsFilter = document.querySelector('#all-filter-input');
 
 allFriendsFilter.addEventListener('keyup', function() {
     let friendsArray = getAllFriendsFromStorage();
@@ -73,23 +88,43 @@ allFriendsFilter.addEventListener('keyup', function() {
             filteredFiends.push(data);
         }
     }
-    loadFriendsToLeftColumn(filteredFiends);
+    loadFriendsToContainer(filteredFiends, allContainer);
+});
+
+selectedFriendsFilter.addEventListener('keyup', function() {
+    let friendsArray = getSelectedFriendsFromStorage();
+    let filteredFiends = [];
+    for (let data of friendsArray) {
+        if (isMatching(`${data['first_name']} ${data['last_name']}`, selectedFriendsFilter.value)) {
+            filteredFiends.push(data);
+        }
+    }
+    loadFriendsToContainer(filteredFiends, selectedContainer);
 });
 
 (async () => {
     let friendsArray = [];
-    let friendsInStorage = localStorage.getItem('all_friends');
-    if (friendsInStorage == null || friendsArray.length == 0) {
+    let friendsInStorage = localStorage.getItem(LOCAL_STORAGE_ALL_FRIENDS_NAME);
+    if (friendsInStorage == null || friendsInStorage.length == 0) {
         try {
             await auth();
             const friends = await callAPI('friends.get', { fields: 'first_name, last_name, photo_100' });
             friendsArray = friends.items;
-            localStorage.setItem('all_friends', JSON.stringify(friendsArray));
+            localStorage.setItem(LOCAL_STORAGE_ALL_FRIENDS_NAME, JSON.stringify(friendsArray));
         } catch (e) {
             console.error(e);
         }
     } else {
         friendsArray = getAllFriendsFromStorage();
     }
-    loadFriendsToLeftColumn(friendsArray);
+
+    loadFriendsToContainer(friendsArray, allContainer);
+
+    let selectedFriendsArray = [];
+    let selectedFriends = localStorage.getItem(LOCAL_STORAGE_SELECTED_FRIENDS_NAME);
+    if (selectedFriends != null && selectedFriends.length > 0) {
+        selectedFriendsArray = getSelectedFriendsFromStorage();
+    }
+
+    loadFriendsToContainer(selectedFriendsArray, selectedContainer);
 })();

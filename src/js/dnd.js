@@ -133,8 +133,37 @@ var DragManager = new function() {
 
     this.onDragEnd = function(dragObject, dropElem) {
         dragObject.avatar.rollback();
-        if (dropElem != dragObject.avatar.parentNode) {
+        let oldParent = dragObject.avatar.parentNode;
+        if (dropElem != oldParent) {
             dropElem.appendChild(dragObject.elem);
+
+            if (dropElem.id == 'all-container') {
+                //remove from selected friends array
+                let newFriendsArray = getSelectedFriendsFromStorage();
+                let deleted = newFriendsArray.splice(dragObject.elem.id, 1);
+                localStorage.setItem(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, JSON.stringify(newFriendsArray));
+                loadFriendsToContainer(newFriendsArray, selectedContainer);
+
+                //add to all friends array
+                newFriendsArray = getAllFriendsFromStorage();
+                dragObject.elem.id = newFriendsArray.push(deleted[0]) - 1;
+                localStorage.setItem(LOCAL_STORAGE_ALL_FRIENDS_NAME, JSON.stringify(newFriendsArray));
+                loadFriendsToContainer(newFriendsArray, allContainer);
+            } else {
+                //remove from all friends array
+                let newFriendsArray = getAllFriendsFromStorage();
+                let deleted = newFriendsArray.splice(dragObject.elem.id, 1);
+                localStorage.setItem(LOCAL_STORAGE_ALL_FRIENDS_NAME, JSON.stringify(newFriendsArray));
+                loadFriendsToContainer(newFriendsArray, allContainer);
+
+                //add to selected friends array
+                newFriendsArray = getSelectedFriendsFromStorage();
+                dragObject.elem.id = newFriendsArray.push(deleted[0]) - 1;
+                localStorage.setItem(LOCAL_STORAGE_SELECTED_FRIENDS_NAME, JSON.stringify(newFriendsArray));
+                loadFriendsToContainer(newFriendsArray, selectedContainer);
+
+
+            }
         }
     };
 

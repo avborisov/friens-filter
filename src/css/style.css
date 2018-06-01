@@ -1,5 +1,8 @@
 #container {
+    position:absolute;
+    left:50%;
     width:800px;
+    margin-left:-400px;
     margin-top:100px;
 }
 
@@ -16,7 +19,7 @@
     width: 50%;
     overflow-y: scroll;
     max-height:600px;
-    height:600px;
+    height:560px;
 }
 
 .friend-container:hover {
@@ -32,7 +35,7 @@
     cursor: pointer;
 }
 
-.friend-delete {
+#right-part .friend-add {
     -moz-transform: rotate(45deg); /* Для Firefox */
     -ms-transform: rotate(45deg); /* Для IE */
     -webkit-transform: rotate(45deg); /* Для Safari, Chrome, iOS */
